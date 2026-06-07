@@ -1,6 +1,4 @@
-# @Author: Dhaval Patel Copyrights Codebasics Inc. and LearnerX Pvt Ltd.
 
-# @Author: Dhaval Patel Copyrights Codebasics Inc. and LearnerX Pvt Ltd.
 from uuid import uuid4
 from dotenv import load_dotenv
 from pathlib import Path
@@ -45,6 +43,7 @@ def process_urls(urls):
         chunk_size=CHUNK_SIZE
     )
     docs = text_splitter.split_documents(data)
+    docs = [doc for doc in docs if doc.page_content.strip()]
     yield "Add chunks to vector database...✅"
     vector_store = FAISS.from_documents(docs, ef)
     vector_store.save_local(str(VECTORSTORE_DIR))
