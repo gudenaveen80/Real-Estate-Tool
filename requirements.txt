@@ -3,7 +3,6 @@ streamlit
 unstructured
 tiktoken
 langchain
-langchain-chroma
 langchain-groq
 langchain-community
 protobuf
