@@ -8,5 +8,5 @@ langchain-community
 protobuf
 langchain-huggingface
 langchain-text-splitters
-chromadb==0.5.23
 sentence-transformers
+faiss-cpu
