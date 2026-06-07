@@ -3,7 +3,6 @@
 from uuid import uuid4
 from dotenv import load_dotenv
 from pathlib import Path
-from langchain.chains import RetrievalQAWithSourcesChain
 from langchain_community.document_loaders import UnstructuredURLLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
@@ -69,16 +68,27 @@ def process_urls(urls):
     vector_store.add_documents(docs, ids=uuids)
 
     yield "Done adding docs to vector database...✅"
-
 def generate_answer(query):
     if not vector_store:
         raise RuntimeError("Vector database is not initialized ")
+    
+    retriever = vector_store.as_retriever()
+    docs = retriever.invoke(query)
+    
+    context = "\n\n".join([doc.page_content for doc in docs])
+    sources = ", ".join(set([doc.metadata.get("source", "") for doc in docs if doc.metadata.get("source")]))
+    
+    prompt = f"""Use the following context to answer the question.
+    
+Context:
+{context}
 
-    chain = RetrievalQAWithSourcesChain.from_llm(llm=llm, retriever=vector_store.as_retriever())
-    result = chain.invoke({"question": query}, return_only_outputs=True)
-    sources = result.get("sources", "")
+Question: {query}
 
-    return result['answer'], sources
+Answer:"""
+    
+    response = llm.invoke(prompt)
+    return response.content, sources
 
 
 if __name__ == "__main__":
