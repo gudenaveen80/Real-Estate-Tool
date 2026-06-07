@@ -2,8 +2,9 @@ python-dotenv
 streamlit
 unstructured
 tiktoken
+langchain==0.1.20
 langchain-chroma
 langchain-groq
-langchain-community
+langchain-community==0.0.38
 protobuf
 langchain-huggingface
