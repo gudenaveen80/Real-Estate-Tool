@@ -35,7 +35,8 @@ def process_urls(urls):
     yield "Initializing Components"
     initialize_components()
     yield "Loading data...✅"
-    loader = UnstructuredURLLoader(urls=urls)
+    from langchain_community.document_loaders import WebBaseLoader
+    loader = WebBaseLoader(urls)
     data = loader.load()
     yield "Splitting text into chunks...✅"
     text_splitter = RecursiveCharacterTextSplitter(
